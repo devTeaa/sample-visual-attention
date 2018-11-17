@@ -44,7 +44,6 @@ class Net(nn.Module):
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(device)
 net = Net()
 net.to(device)
 
@@ -97,6 +96,8 @@ total = 0
 with torch.no_grad():
     for data in testloader:
         images, labels = data
+        images, labels = images.cuda(), labels.cuda()
+
         outputs = net(images)
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
