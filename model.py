@@ -76,6 +76,19 @@ for epoch in range(2):  # loop over the dataset multiple times
 
 print('Finished Training')
 
+dataiter = iter(testloader)
+images, labels = dataiter.next()
+
+# print images
+print('GroundTruth: ', ' '.join('%5s' % classes[labels[j]] for j in range(4)))
+
+outputs = net(images)
+
+_, predicted = torch.max(outputs, 1)
+
+print('Predicted: ', ' '.join('%5s' % classes[predicted[j]]
+                              for j in range(4)))
+
 correct = 0
 total = 0
 with torch.no_grad():
