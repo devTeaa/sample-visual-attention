@@ -59,8 +59,6 @@ for epoch in range(2):  # loop over the dataset multiple times
         optimizer.zero_grad()
 
         # forward + backward + optimize
-        import pdb
-        pdb.set_trace()
         outputs = net(inputs)
         loss = criterion(outputs, labels)
         loss.backward()
