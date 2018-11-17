@@ -33,9 +33,25 @@ class Net(nn.Module):
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, 10)
 
+        self.fc1a = nn.Linear(16 * 5 * 5, 120)
+        self.fc2a = nn.Linear(120, 84)
+        self.fc3a = nn.Linear(84, 25)
+
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
+
+        """
+            Simple Visual Attention
+        """
+
+        y = x.view(-1, 16 * 5 * 5)
+        y = F.relu(self.fc1a(y))
+        y = F.relu(self.fc2a(y))
+        y = self.fc3a(y)
+        y = y[0].view(-1, 5)
+
+        x = x * y
         x = x.view(-1, 16 * 5 * 5)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
