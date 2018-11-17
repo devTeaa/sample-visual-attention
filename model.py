@@ -83,6 +83,7 @@ images, labels = dataiter.next()
 # print images
 print('GroundTruth: ', ' '.join('%5s' % classes[labels[j]] for j in range(4)))
 
+outputs.to(device)
 outputs = net(images)
 
 _, predicted = torch.max(outputs, 1)
