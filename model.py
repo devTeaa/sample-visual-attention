@@ -64,6 +64,7 @@ for epoch in range(2):  # loop over the dataset multiple times
 
         # forward + backward + optimize
         outputs = net(inputs)
+        outputs = outputs.cuda()
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
@@ -83,7 +84,6 @@ images, labels = dataiter.next()
 # print images
 print('GroundTruth: ', ' '.join('%5s' % classes[labels[j]] for j in range(4)))
 
-outputs.to(device)
 outputs = net(images)
 
 _, predicted = torch.max(outputs, 1)
