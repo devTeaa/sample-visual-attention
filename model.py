@@ -43,7 +43,9 @@ class Net(nn.Module):
         return x
 
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 net = Net()
+net.to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
@@ -54,6 +56,7 @@ for epoch in range(2):  # loop over the dataset multiple times
     for i, data in enumerate(trainloader, 0):
         # get the inputs
         inputs, labels = data
+        inputs, labels = inputs.to(device), labels.to(device)
 
         # zero the parameter gradients
         optimizer.zero_grad()
@@ -85,3 +88,23 @@ with torch.no_grad():
 
 print('Accuracy of the network on the 10000 test images: %d %%' % (
     100 * correct / total))
+
+print('=======================================================')
+
+class_correct = list(0. for i in range(10))
+class_total = list(0. for i in range(10))
+with torch.no_grad():
+    for data in testloader:
+        images, labels = data
+        outputs = net(images)
+        _, predicted = torch.max(outputs, 1)
+        c = (predicted == labels).squeeze()
+        for i in range(4):
+            label = labels[i]
+            class_correct[label] += c[i].item()
+            class_total[label] += 1
+
+
+for i in range(10):
+    print('Accuracy of %5s : %2d %%' % (
+        classes[i], 100 * class_correct[i] / class_total[i]))
